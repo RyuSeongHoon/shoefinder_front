@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-shoefinder-dev-155323-authRole",
+      "UnauthRoleArn": "arn:aws:iam::378210194107:role/amplify-shoefinder-dev-155323-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::378210194107:role/amplify-shoefinder-dev-155323-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-shoefinder-dev-155323-deployment",
+      "UnauthRoleName": "amplify-shoefinder-dev-155323-unauthRole",
+      "StackName": "amplify-shoefinder-dev-155323",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:378210194107:stack/amplify-shoefinder-dev-155323/04d6f3a0-6d2b-11ec-baef-0a988422b0d0",
+      "AmplifyAppId": "dx0p1efdtxkyi"
+    },
+    "categories": {
+      "auth": {
+        "shoefinder3789844f": {}
+      }
+    }
+  }
+}
