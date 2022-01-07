@@ -5,6 +5,7 @@ import Header from "../../src/components/header";
 import Footer from "../../src/components/Footer";
 import Link from "next/link";
 import { Auth } from "aws-amplify";
+import router from "next/router";
 
 const initialValues = {
   email: "",
@@ -21,13 +22,14 @@ const signInSchema = Yup.object().shape({
     .required("비밀번호를 입력해주세요"),
 });
 
-async function AmplifysignIn(values) {
+async function amplifysignIn(values) {
   const { email, password } = values;
   try {
     const user = await Auth.signIn(email, password);
     console.log(user);
+    router.push("/");
   } catch (error) {
-    console.log("error signing in", error);
+    console.log("signing in 에러", error);
   }
 }
 
@@ -41,7 +43,7 @@ const Login = () => (
           <Formik
             initialValues={initialValues}
             validationSchema={signInSchema}
-            onSubmit={AmplifysignIn}
+            onSubmit={amplifysignIn}
           >
             {({
               values,
@@ -108,7 +110,9 @@ const Login = () => (
         </section>
       </div>
     </div>
-    <Footer className="footer" />
+    <div className="footer">
+      <Footer />
+    </div>
   </wrapper>
 );
 
