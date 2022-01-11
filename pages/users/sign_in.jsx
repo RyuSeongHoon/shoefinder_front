@@ -38,7 +38,7 @@ async function amplifysignIn(values) {
     })
       .then((user) => console.log(user))
       .catch((err) => console.log(err));
-    // console.log("attributes", attributes);
+    console.log("attributes", attributes.email);
   } catch (error) {
     console.log("error signing in", error);
   }
