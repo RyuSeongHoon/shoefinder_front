@@ -7,24 +7,24 @@ import DaumPostcode from "react-daum-postcode";
 import { Auth } from "aws-amplify";
 import router from "next/router";
 
-const SignIn = () => {
+const SignUp = () => {
   const [isDaumPost, setIsDaumPost] = useState(false);
 
   async function amplifySignUp(values) {
-    const { username, password, email } = values;
+    const { username, password, email, address1, address2 } = values;
+    const address = address1 + address2;
     try {
-      const { user, userConfirmed, userSub } = await Auth.signUp({
+      const { user } = await Auth.signUp({
         username,
         password,
         attributes: {
+          address,
           email,
         },
       });
-      //   console.log("user", user);
-      //   console.log("userConfirmed", userConfirmed);
-      //   console.log("userSub", userSub);
+      console.log("user", user);
       alert("가입이 완료 되었습니다. ShoeFinder에 오신걸 환영합니다.");
-      router.push("/");
+      router.push("/users/welcome");
     } catch (error) {
       console.log("error signing up:", error);
     }
@@ -99,7 +99,6 @@ const SignIn = () => {
               handleBlur,
               handleSubmit,
               setFieldValue,
-              isSubmitting,
             }) => (
               <div className="w-2/5">
                 <form onSubmit={handleSubmit} className="w-full p-6 shadow-xl">
@@ -255,4 +254,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

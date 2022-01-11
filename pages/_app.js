@@ -1,5 +1,12 @@
 import "../styles/globals.css";
 import Amplify from "aws-amplify";
+import {
+  RecoilRoot,
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+} from "recoil";
 
 Amplify.configure({
   Auth: {
@@ -14,10 +21,10 @@ Amplify.configure({
     identityPoolRegion: "XX-XXXX-X",
 
     // OPTIONAL - Amazon Cognito User Pool ID
-    userPoolId: "ap-northeast-2_hQYYPmMd4",
+    userPoolId: "ap-northeast-2_QxUmgA7Bg",
 
     // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolWebClientId: "5tunpq3ddnqehrpoffri8afphe",
+    userPoolWebClientId: "3hvhpn6vhjodqcmkvudajft432",
 
     // OPTIONAL - Enforce user authentication prior to accessing AWS resources or not
     mandatorySignIn: false,
@@ -26,13 +33,14 @@ Amplify.configure({
     // Note: if the secure flag is set to true, then the cookie transmission requires a secure protocol
     cookieStorage: {
       // REQUIRED - Cookie domain (only required if cookieStorage is provided)
-      domain: "shoefinder",
+      domain: "localhost",
       // OPTIONAL - Cookie path
       path: "/",
       // OPTIONAL - Cookie expiration in days
       expires: 365,
       // OPTIONAL - See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
-      // sameSite: "strict" | "lax",
+      // Lax : sameSite 인지 체크하고, Samesite아니면 쿠키를 전송하지 않도록 강제하는 정책
+      sameSite: "none",
       // OPTIONAL - Cookie secure flag
       // Either true or false, indicating if the cookie transmission requires a secure protocol (https).
       secure: true,
@@ -49,7 +57,7 @@ Amplify.configure({
 
     // OPTIONAL - Hosted UI configuration
     oauth: {
-      domain: "shoefinder",
+      domain: "shoefinder123",
       scope: [
         "phone",
         "email",
@@ -65,7 +73,11 @@ Amplify.configure({
 });
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <RecoilRoot>
+      <Component {...pageProps} />
+    </RecoilRoot>
+  );
 }
 
 export default MyApp;

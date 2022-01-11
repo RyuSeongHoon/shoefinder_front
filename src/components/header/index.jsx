@@ -3,12 +3,32 @@ import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../public/asset/images/Logo.png";
 import { Transition } from "@headlessui/react";
+import { isAuthenticated } from "../../common/atom";
+import { useRecoilState } from "recoil";
+import { Auth } from "aws-amplify";
 
 export default function Header() {
   const [isShowing, setIsShowing] = useState(false);
   const handleMdOpen = () => {
     setIsShowing(!isShowing);
   };
+  const [isAutenticate, setIsAutenticate] = useRecoilState(isAuthenticated);
+
+  async function amplifySignOut() {
+    try {
+      await Auth.signOut();
+      setIsAutenticate(false);
+      alert("성공적으로 로그아웃 하였습니다");
+
+      Auth.currentAuthenticatedUser({
+        bypassCache: true,
+      })
+        .then((user) => console.log("로그아웃시 유저", user))
+        .catch((err) => console.log(err));
+    } catch (error) {
+      console.log("error signing out: ", error);
+    }
+  }
 
   return (
     <>
@@ -37,14 +57,31 @@ export default function Header() {
           </section>
           <section className="flex mr-20 font-bold">
             <div className="px-5 mdHidden mt-9">
-              <Link href="/users/sign_in">
-                <a className="mr-5">Login</a>
-              </Link>
+              {isAutenticate ? (
+                <Link href="/users/my">
+                  <a className="mr-5">My page</a>
+                </Link>
+              ) : (
+                <Link href="/users/sign_in">
+                  <a className="mr-5">Login</a>
+                </Link>
+              )}
             </div>
             <div className="px-5 pt-3 mt-6 rounded-lg bg-brown-400 mb-7 mdHidden ">
-              <Link href="/users/sign_up">
-                <a>SignUp</a>
-              </Link>
+              {isAutenticate ? (
+                <button
+                  className="font-bold"
+                  onClick={() => {
+                    amplifySignOut();
+                  }}
+                >
+                  LogOut
+                </button>
+              ) : (
+                <Link href="/users/sign_up">
+                  <a>SignUp</a>
+                </Link>
+              )}
             </div>
           </section>
           <div
