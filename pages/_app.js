@@ -1,5 +1,12 @@
 import "../styles/globals.css";
 import Amplify from "aws-amplify";
+import {
+  RecoilRoot,
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+} from "recoil";
 
 Amplify.configure({
   Auth: {
@@ -14,10 +21,10 @@ Amplify.configure({
     identityPoolRegion: "XX-XXXX-X",
 
     // OPTIONAL - Amazon Cognito User Pool ID
-    userPoolId: "ap-northeast-2_HtHF5KetF",
+    userPoolId: "ap-northeast-2_QxUmgA7Bg",
 
     // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolWebClientId: "6fqmj3gvp5d7bl9qar0d1vomhp",
+    userPoolWebClientId: "3hvhpn6vhjodqcmkvudajft432",
 
     // OPTIONAL - Enforce user authentication prior to accessing AWS resources or not
     mandatorySignIn: false,
@@ -50,7 +57,7 @@ Amplify.configure({
 
     // OPTIONAL - Hosted UI configuration
     oauth: {
-      domain: "shoefinder",
+      domain: "shoefinder123",
       scope: [
         "phone",
         "email",
@@ -66,7 +73,11 @@ Amplify.configure({
 });
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <RecoilRoot>
+      <Component {...pageProps} />
+    </RecoilRoot>
+  );
 }
 
 export default MyApp;
