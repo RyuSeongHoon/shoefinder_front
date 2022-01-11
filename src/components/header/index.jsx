@@ -6,6 +6,7 @@ import { Transition } from "@headlessui/react";
 import { isAuthenticated } from "../../common/atom";
 import { useRecoilState } from "recoil";
 import { Auth } from "aws-amplify";
+import router from "next/router";
 
 export default function Header() {
   const [isShowing, setIsShowing] = useState(false);
@@ -19,6 +20,7 @@ export default function Header() {
       await Auth.signOut();
       setIsAutenticate(false);
       alert("성공적으로 로그아웃 하였습니다");
+      router.push("/");
 
       Auth.currentAuthenticatedUser({
         bypassCache: true,
@@ -49,7 +51,7 @@ export default function Header() {
                 </Link>
               </div>
               <div>
-                <Link href="/showList나중에 업데이트 하기">
+                <Link href="/contents/new_page">
                   <a className="mdHidden">Shoe Register</a>
                 </Link>
               </div>
