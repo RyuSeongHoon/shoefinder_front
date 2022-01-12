@@ -14,6 +14,8 @@
     "formik": "^2.2.9",
     "next": "^12.0.8-canary.18",
     "next-images": "^1.8.4",
+    "pg": "^8.7.1",
+    "pg-promise": "^10.11.1",
     "react": "17.0.2",
     "react-daum-postcode": "^3.0.1",
     "react-dom": "17.0.2",
@@ -26,5 +28,18 @@
     "eslint-config-next": "12.0.7",
     "postcss": "^8.4.5",
     "tailwindcss": "^3.0.5"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "version": "1.0.0",
+  "main": "next.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyuSeongHoon/shoefinder_front.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RyuSeongHoon/shoefinder_front/issues"
+  },
+  "homepage": "https://github.com/RyuSeongHoon/shoefinder_front#readme"
 }

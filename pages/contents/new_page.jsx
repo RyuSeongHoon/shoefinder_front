@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import Header from "../../src/components/header";
 import Footer from "../../src/components/Footer";
 
+
 const NewContents = () => {
   const initialValues = {
     shoe_name: "",
