@@ -1,25 +1,70 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Header from "../../src/components/header";
 import Footer from "../../src/components/Footer";
+import Router from "next/router";
+import useAuth from "../../src/common/hooks/useAuth";
+import { Storage } from "aws-amplify";
+import { useMutation } from "react-query";
+
+import useFileManager from "../../src/common/hooks/useFileManager";
+import router from "next/router";
+import { convertObjectToFormData } from "../../src/utils";
+import { v4 as uuidv4 } from "uuid";
+import { createContent } from "../../src/common/api/index";
+
+const initialValues = {
+  shoe_name: "",
+  shoe_brand: "",
+  shoe_size: "",
+  shoe_color: "",
+};
+
+const contentsSchema = Yup.object().shape({
+  shoe_name: Yup.string().required("이름을 입력해주세요"),
+  shoe_brand: Yup.string().required("브랜드를 입력해주세요"),
+  shoe_size: Yup.number().required("사이즈를 골라 주세요"),
+  shoe_color: Yup.string().required("색상을 입력해주세요"),
+});
+
+async function amplifyUpload(values) {
+  const { image } = values;
+
+  try {
+    await Storage.put(`${uuidv4()}`, image, {
+      level: "public",
+      contentType: "file/png",
+    });
+    router.push("/");
+  } catch (error) {
+    console.log("error content upload", error);
+  }
+}
 
 const NewContents = () => {
-  const initialValues = {
-    shoe_name: "",
-    shoe_brand: "",
-    shoe_size: "",
-    shoe_color: "",
-  };
+  const { isAuthenticated } = useAuth();
 
-  const contentsSchema = Yup.object().shape({
-    shoe_name: Yup.string().required("이름을 입력해주세요"),
-    shoe_brand: Yup.string().required("브랜드를 입력해주세요"),
-    shoe_size: Yup.number().required("사이즈를 골라 주세요"),
-    shoe_color: Yup.string().required("색상을 입력해주세요"),
+  const { mutate } = useMutation(createContent(), {
+    onSuccess: () => {
+      router.push("/contents");
+      setTimeout(() => {
+        alert("컨텐츠 등록이 성공되었습니다"), 500;
+        console.log("data", data);
+      });
+    },
   });
 
-  // const S3 / RDS 로 보내는 함수
+  const onSubmitHandler = useCallback(async (params) => {
+    try {
+      await amplifyUpload(params);
+    } catch (error) {
+      console.log("error content upload", error);
+    }
+  }, []);
+
+  const [previewURL, setPreviewURL] = useState("");
+  const [imageFile, setImageFile] = useState(null);
 
   return (
     <wrapper className="wrapper">
@@ -30,7 +75,14 @@ const NewContents = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={contentsSchema}
-            // onSubmit={amplifySignUp}
+            onSubmit={async (values) => {
+              const formData = convertObjectToFormData({
+                modelName: "content",
+                data: values,
+              });
+              mutate(formData);
+              onSubmitHandler(values);
+            }}
           >
             {({
               values,
@@ -39,10 +91,51 @@ const NewContents = () => {
               handleChange,
               handleBlur,
               handleSubmit,
+              setFieldValue,
             }) => (
               <div className="w-2/5">
                 <form onSubmit={handleSubmit} className="w-full p-6 shadow-xl">
                   <section className="flex flex-col w-full">
+                    <div className="flex flex-col pt-4">
+                      <label htmlFor="image">
+                        {imageFile == null ? (
+                          <div className="flex items-center justify-center rounded-md cursor-pointer w-28 h-28">
+                            <span className="text-5xl text-gray-400">﹢</span>
+                          </div>
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            className="rounded-md cursor-pointer w-28 h-28"
+                            src={previewURL}
+                            alt=""
+                          />
+                        )}
+                      </label>
+                      <input
+                        id="image"
+                        name="image"
+                        type="file"
+                        className="hidden pt-4 text-center"
+                        accept="image/*"
+                        ///////////이미지 업로드//////////
+                        onChange={async (e) => {
+                          let reader = new FileReader();
+                          let file = e.target.files[0];
+                          reader.onloadend = () => {
+                            setImageFile(file);
+                            setPreviewURL(reader.result);
+                          };
+                          reader.readAsDataURL(file);
+                          setFieldValue("image", e.currentTarget.files[0]);
+                        }}
+                      ></input>
+                      <label
+                        htmlFor="video"
+                        className="block mb-6 text-sm font-medium text-gray-700"
+                      >
+                        * 이미지 파일
+                      </label>
+                    </div>
                     <label htmlFor="shoe_name" className="title">
                       신발이름
                     </label>
@@ -61,7 +154,6 @@ const NewContents = () => {
                         errors.shoe_name}
                     </p>
                   </section>
-
                   <section className="flex flex-col inputSection">
                     <label htmlFor="shoe_brand" className="title">
                       브랜드 명
@@ -105,11 +197,17 @@ const NewContents = () => {
                   </section>
                   <section className="flex flex-col inputSection">
                     <section className="flex justify-center mt-8 text-center">
-                      <label htmlor="shoe_size" className="title">
+                      <label htmlFor="shoe_size" className="title">
                         사이즈
                       </label>
                       <section className="pl-64 mb-8">
-                        <select id="shoe_size">
+                        <select
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.shoe_size}
+                          id="shoe_size"
+                          name="shoe_size"
+                        >
                           <option value="">사이즈를 골라주세요</option>
                           <option value="240">240</option>
                           <option value="245">245</option>
@@ -126,15 +224,20 @@ const NewContents = () => {
                       </section>
                     </section>
                   </section>
-
-                  <section className="flex justify-end mt-5">
-                    <button
-                      type="submit"
-                      className="w-32 p-2 mt-3 mb-3 font-bold text-center text-yellow-700 border border-yellow-700 rounded-md hoverWhiteButton"
-                    >
-                      등록
-                    </button>
-                  </section>
+                  {isAuthenticated ? (
+                    <section className="flex justify-end mt-5">
+                      <button
+                        type="submit"
+                        className="w-32 p-2 mt-3 mb-3 font-bold text-center text-yellow-700 border border-yellow-700 rounded-md hoverWhiteButton"
+                      >
+                        등록
+                      </button>
+                    </section>
+                  ) : (
+                    <div className="my-2 text-sm text-gray-400">
+                      *로그인 후 업로드 가능
+                    </div>
+                  )}
                 </form>
               </div>
             )}

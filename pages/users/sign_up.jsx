@@ -22,7 +22,6 @@ const SignUp = () => {
           email,
         },
       });
-      console.log("user", user);
       alert("가입이 완료 되었습니다. ShoeFinder에 오신걸 환영합니다.");
       router.push("/users/welcome");
     } catch (error) {
