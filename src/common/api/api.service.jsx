@@ -6,7 +6,17 @@ export const ApiService = (resourceName) => {
     return data;
   };
 
+  const infiniteQuery =
+    (params) =>
+    async ({ pageParam = 1 }) => {
+      const { data } = await API.get(`${resourceName}?cursor=${pageParam}`, {
+        params,
+      });
+      return data;
+    };
+
   return {
     create,
+    infiniteQuery,
   };
 };

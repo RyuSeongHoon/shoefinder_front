@@ -3,16 +3,14 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Header from "../../src/components/header";
 import Footer from "../../src/components/Footer";
-import Router from "next/router";
 import useAuth from "../../src/common/hooks/useAuth";
 import { Storage } from "aws-amplify";
 import { useMutation } from "react-query";
-
-import useFileManager from "../../src/common/hooks/useFileManager";
 import router from "next/router";
 import { convertObjectToFormData } from "../../src/utils";
 import { v4 as uuidv4 } from "uuid";
 import { createContent } from "../../src/common/api/index";
+import ContentCard from "../../src/components/contents";
 
 const initialValues = {
   shoe_name: "",
@@ -69,6 +67,7 @@ const NewContents = () => {
   return (
     <wrapper className="wrapper">
       <Header />
+      <ContentCard></ContentCard>
       <div className="py-10 mt-6 ">
         <h3 className="text-4xl font-extrabold text-center">컨텐츠 등록</h3>
         <section className="flex justify-center p-3 mt-10">
