@@ -40,6 +40,7 @@ async function amplifyUpload(values) {
   }
 }
 
+
 const NewContents = () => {
   const { isAuthenticated } = useAuth();
 
