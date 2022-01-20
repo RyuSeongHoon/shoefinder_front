@@ -8,6 +8,7 @@ import { Auth } from "aws-amplify";
 import router from "next/router";
 import { useRecoilState } from "recoil";
 import { isAuthenticated } from "../../src/common/atom";
+import useAuth from "../../src/common/hooks/useAuth";
 
 const initialValues = {
   email: "",
@@ -24,42 +25,41 @@ const signInSchema = Yup.object().shape({
     .required("비밀번호를 입력해주세요"),
 });
 
-//     const isExpired = user.signInUserSession.accessToken.payload.exp;
-
 async function amplifysignIn(values) {
   const { email, password } = values;
   try {
-    const user = await Auth.signIn(email, password);
+    await Auth.signIn(email, password);
     router.push("/");
-    console.log("로그인시 유저", user);
-
-    Auth.currentAuthenticatedUser({
-      bypassCache: true,
-    })
-      .then((user) => console.log(user))
-      .catch((err) => console.log(err));
-    console.log("attributes", attributes.email);
+    const { attributes } = await Auth.currentAuthenticatedUser();
+    console.log("attribute", attributes);
+    console.log("sub", attributes.sub);
+    // Auth.currentAuthenticatedUser({
+    //       bypassCache: true,
+    //     })
+    //       .then(console.log("attribute", attribute))
+    //       .catch((err) => console.log(err));
   } catch (error) {
     console.log("error signing in", error);
   }
 }
 
 const Login = () => {
-  const [isAutenticate, setIsAutenticate] = useRecoilState(isAuthenticated);
+  const [isAutenticated, setisAutenticated] = useRecoilState(isAuthenticated);
+  const { updateCurrentUser } = useAuth();
 
-  const onSubmitHander = useCallback(
+  const onSubmitHandler = useCallback(
     async (signInparams) => {
       try {
         await amplifysignIn(signInparams);
-        setIsAutenticate(true);
+        updateCurrentUser(signInparams);
       } catch (error) {
         console.log("login error", error);
       }
     },
-    [setIsAutenticate]
+    [updateCurrentUser]
   );
 
-  console.log("isauten", isAutenticate);
+  console.log("isauten", isAutenticated);
 
   return (
     <wrapper className="wrapper">
@@ -71,7 +71,7 @@ const Login = () => {
             <Formik
               initialValues={initialValues}
               validationSchema={signInSchema}
-              onSubmit={onSubmitHander}
+              onSubmit={onSubmitHandler}
             >
               {({
                 values,

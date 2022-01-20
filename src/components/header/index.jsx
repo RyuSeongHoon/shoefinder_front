@@ -7,26 +7,29 @@ import { isAuthenticated } from "../../common/atom";
 import { useRecoilState } from "recoil";
 import { Auth } from "aws-amplify";
 import router from "next/router";
+import useAuth from "../../common/hooks/useAuth";
 
 export default function Header() {
   const [isShowing, setIsShowing] = useState(false);
   const handleMdOpen = () => {
     setIsShowing(!isShowing);
   };
-  const [isAutenticate, setIsAutenticate] = useRecoilState(isAuthenticated);
 
-  async function amplifySignOut() {
+  const { updateCurrentUser } = useAuth();
+  const [isAutenticated, setisAutenticated] = useRecoilState(isAuthenticated);
+
+  async function amplifySignOut(user) {
     try {
-      await Auth.signOut();
-      setIsAutenticate(false);
+      await Auth.signOut(user);
+      updateCurrentUser(user);
       alert("성공적으로 로그아웃 하였습니다");
-      router.push("/");
 
-      Auth.currentAuthenticatedUser({
-        bypassCache: true,
-      })
-        .then((user) => console.log("로그아웃시 유저", user))
-        .catch((err) => console.log(err));
+      router.push("/");
+      // Auth.currentAuthenticatedUser({
+      //   bypassCache: true,
+      // })
+      //   .then((user) => console.log("로그아웃시 유저", user))
+      //   .catch((err) => console.log(err));
     } catch (error) {
       console.log("error signing out: ", error);
     }
@@ -59,7 +62,7 @@ export default function Header() {
           </section>
           <section className="flex mr-20 font-bold">
             <div className="px-5 mdHidden mt-9">
-              {isAutenticate ? (
+              {isAutenticated ? (
                 <Link href="/users/my">
                   <a className="mr-5">My page</a>
                 </Link>
@@ -70,13 +73,8 @@ export default function Header() {
               )}
             </div>
             <div className="px-5 pt-3 mt-6 rounded-lg bg-brown-400 mb-7 mdHidden ">
-              {isAutenticate ? (
-                <button
-                  className="font-bold"
-                  onClick={() => {
-                    amplifySignOut();
-                  }}
-                >
+              {isAutenticated ? (
+                <button className="font-bold" onClick={amplifySignOut}>
                   LogOut
                 </button>
               ) : (
