@@ -12,8 +12,10 @@
     "@heroicons/react": "^1.0.5",
     "aws-amplify": "^4.3.11",
     "axios": "^0.24.0",
+    "cors": "^2.8.5",
     "dotenv": "^14.2.0",
     "formik": "^2.2.9",
+    "http-proxy-middleware": "^2.0.1",
     "next": "^12.0.8-canary.18",
     "next-images": "^1.8.4",
     "pg": "^8.7.1",
@@ -27,6 +29,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@types/node": "^17.0.10",
     "autoprefixer": "^10.4.0",
     "eslint": "8.4.1",
     "eslint-config-next": "12.0.7",
@@ -45,5 +48,6 @@
   "bugs": {
     "url": "https://github.com/RyuSeongHoon/shoefinder_front/issues"
   },
+  "proxy": "http://127.0.0.1:8000/",
   "homepage": "https://github.com/RyuSeongHoon/shoefinder_front#readme"
 }

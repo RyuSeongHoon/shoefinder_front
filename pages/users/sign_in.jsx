@@ -30,9 +30,7 @@ async function amplifysignIn(values) {
   try {
     await Auth.signIn(email, password);
     router.push("/");
-    const { attributes } = await Auth.currentAuthenticatedUser();
-    console.log("attribute", attributes);
-    console.log("sub", attributes.sub);
+    // const { attributes } = await Auth.currentAuthenticatedUser();
     // Auth.currentAuthenticatedUser({
     //       bypassCache: true,
     //     })
@@ -58,8 +56,6 @@ const Login = () => {
     },
     [updateCurrentUser]
   );
-
-  console.log("isauten", isAutenticated);
 
   return (
     <wrapper className="wrapper">

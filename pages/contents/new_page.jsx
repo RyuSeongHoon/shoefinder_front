@@ -7,10 +7,10 @@ import useAuth from "../../src/common/hooks/useAuth";
 import { Storage } from "aws-amplify";
 import { useMutation } from "react-query";
 import router from "next/router";
-import { convertObjectToFormData } from "../../src/utils";
+// import { convertObjectToFormData } from "../../src/utils";
 import { v4 as uuidv4 } from "uuid";
 import { createContent } from "../../src/common/api/index";
-import ContentCard from "../../src/components/contents";
+// import ContentCard from "../../src/components/contents";
 
 const initialValues = {
   shoe_name: "",
@@ -40,20 +40,7 @@ async function amplifyUpload(values) {
   }
 }
 
-
 const NewContents = () => {
-  const { isAuthenticated } = useAuth();
-
-  const { mutate } = useMutation(createContent(), {
-    onSuccess: () => {
-      router.push("/contents");
-      setTimeout(() => {
-        alert("컨텐츠 등록이 성공되었습니다"), 500;
-        console.log("data", data);
-      });
-    },
-  });
-
   const onSubmitHandler = useCallback(async (params) => {
     try {
       await amplifyUpload(params);
@@ -62,26 +49,42 @@ const NewContents = () => {
     }
   }, []);
 
+  const { isAuthenticated } = useAuth();
   const [previewURL, setPreviewURL] = useState("");
   const [imageFile, setImageFile] = useState(null);
+
+  const { mutate } = useMutation(createContent(), {
+    onSuccess: () => {
+      router.push("/");
+      console.log("뮤테이트");
+      alert("컨텐츠 등록이 성공되었습니다");
+    },
+    onError: (error) => {
+      console.log("Mutate-error", error);
+    },
+  });
 
   return (
     <wrapper className="wrapper">
       <Header />
-      <ContentCard></ContentCard>
       <div className="py-10 mt-6 ">
         <h3 className="text-4xl font-extrabold text-center">컨텐츠 등록</h3>
         <section className="flex justify-center p-3 mt-10">
           <Formik
             initialValues={initialValues}
             validationSchema={contentsSchema}
-            onSubmit={async (values) => {
-              const formData = convertObjectToFormData({
-                modelName: "content",
-                data: values,
-              });
-              mutate(formData);
-              onSubmitHandler(values);
+            onSubmit={async (values, { setSubmitting }) => {
+              setSubmitting(false);
+              const { shoe_size, shoe_name, shoe_color, shoe_brand, image } =
+                values;
+              const shoeData = {
+                shoe_size,
+                shoe_name,
+                shoe_color,
+                shoe_brand,
+              };
+              mutate(shoeData);
+              onSubmitHandler(image);
             }}
           >
             {({
@@ -117,7 +120,6 @@ const NewContents = () => {
                         type="file"
                         className="hidden pt-4 text-center"
                         accept="image/*"
-                        ///////////이미지 업로드//////////
                         onChange={async (e) => {
                           let reader = new FileReader();
                           let file = e.target.files[0];
@@ -130,7 +132,7 @@ const NewContents = () => {
                         }}
                       ></input>
                       <label
-                        htmlFor="video"
+                        htmlFor="image"
                         className="block mb-6 text-sm font-medium text-gray-700"
                       >
                         * 이미지 파일
