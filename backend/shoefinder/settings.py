@@ -42,8 +42,8 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,12 +54,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'webpack_loader',
+    'rest_framework',
     'corsheaders',
     'home',
+    'contents',
     'users',
-    'testapi',
-    'rest_framework'
+    'testapi',   
 ]
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.DjangoModelPermissions',
+#     )
+# }
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -70,11 +78,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000",
-    "http://127.0.0.1:8000",
 ]
 
 ROOT_URLCONF = 'shoefinder.urls'
@@ -121,8 +124,22 @@ DATABASES = {
     # }
 }
 
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:8000",
+# ]
+API_URL = "localhost:8000"
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+    "http://127.0.0.1:8000",
+]
+# CORS_ALLOW_HEADERS = ['*']
+# CSRF_TRUSTED_ORIGINS = ['*']
+
 # DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
 # DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa F405
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

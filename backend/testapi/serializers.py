@@ -1,16 +1,10 @@
 from django.db.models.expressions import Value
 from rest_framework import serializers
-from .models import Test
-from testapi.models import Test
+from .models import Test1
 
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Test
-        fields = ['shoe_name','shoe_brand', 'shoe_size', 'shoe_color']
-    # shoe_brand = serializers.CharField(max_length=256)
-    # shoe_name = serializers.CharField(max_length=256)
-    # shoe_size = serializers.CharField()
-    # shoe_color = serializers.CharField()
-    # image = serializers.ImageField()
-
+        model = Test1
+        fields = ['shoe_name','shoe_brand', 'shoe_size', 'shoe_color', 'image']
+        # fields = '__all__'
