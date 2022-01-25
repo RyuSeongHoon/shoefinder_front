@@ -58,7 +58,7 @@ const Login = () => {
   );
 
   return (
-    <wrapper className="wrapper">
+    <main className="main">
       <Header />
       <div className="py-10 mt-6">
         <div className="flex flex-col justify-center ">
@@ -137,7 +137,7 @@ const Login = () => {
       <div className="footer">
         <Footer />
       </div>
-    </wrapper>
+    </main>
   );
 };
 

@@ -5,4 +5,4 @@ export const {
   query: getContents,
   get: getContent,
   create: createContent,
-} = ApiService("testapi");
+} = ApiService("test");

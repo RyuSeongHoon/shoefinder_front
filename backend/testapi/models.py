@@ -4,10 +4,10 @@ from utils.functions import PathAndRename
 # Create your models here.
 
 class Test1(models.Model):
-    shoe_name = models.CharField(max_length=256, verbose_name="신발명")
-    shoe_brand = models.CharField(max_length=256, verbose_name="브랜드")
-    shoe_size = models.CharField(max_length=256, verbose_name="사이즈")
-    shoe_color = models.CharField(max_length=256, verbose_name="색깔")
+    shoe_name = models.CharField(max_length=256,null=True, blank=True, verbose_name="신발명")
+    shoe_brand = models.CharField(max_length=256,null=True, blank=True, verbose_name="브랜드")
+    shoe_size = models.CharField(max_length=256,null=True, blank=True, verbose_name="사이즈")
+    shoe_color = models.CharField(max_length=256,null=True, blank=True, verbose_name="색깔")
 
     image = models.ImageField(
                         upload_to='%Y/%m/%d', blank=True, null=True)

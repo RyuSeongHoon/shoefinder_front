@@ -2,10 +2,10 @@ import axios from "axios";
 import { API } from "./api.config";
 
 export const ApiService = (resourceName) => {
-  const create = async () => {
+  const create = async (values) => {
     console.log("api 실행전");
-    const { data } = await API.post(`${resourceName}`);
-    console.log("api 실행 완료");
+    const { data } = await API.post(`${resourceName}/`, values);
+    console.log("api 실행완료, data", data);
     return data;
   };
 

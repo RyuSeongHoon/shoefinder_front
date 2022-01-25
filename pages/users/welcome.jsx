@@ -3,7 +3,7 @@ import Footer from "../../src/components/Footer";
 
 const Welcome = () => {
   return (
-    <wrapper>
+    <main>
       <Header />
       <section className="flex flex-col ml-24 ">
         <div className="text-2xl">
@@ -18,7 +18,7 @@ const Welcome = () => {
         </div>
       </section>
       <Footer />
-    </wrapper>
+    </main>
   );
 };
 

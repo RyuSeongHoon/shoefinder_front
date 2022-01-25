@@ -7,16 +7,16 @@ import useAuth from "../../src/common/hooks/useAuth";
 import { Storage } from "aws-amplify";
 import { useMutation } from "react-query";
 import router from "next/router";
-// import { convertObjectToFormData } from "../../src/utils";
 import { v4 as uuidv4 } from "uuid";
 import { createContent } from "../../src/common/api/index";
-// import ContentCard from "../../src/components/contents";
+import { convertObjectToFormData } from "../../src/utils";
 
 const initialValues = {
   shoe_name: "",
   shoe_brand: "",
   shoe_size: "",
   shoe_color: "",
+  image: "",
 };
 
 const contentsSchema = Yup.object().shape({
@@ -28,7 +28,6 @@ const contentsSchema = Yup.object().shape({
 
 async function amplifyUpload(values) {
   const { image } = values;
-
   try {
     await Storage.put(`${uuidv4()}`, image, {
       level: "public",
@@ -53,10 +52,9 @@ const NewContents = () => {
   const [previewURL, setPreviewURL] = useState("");
   const [imageFile, setImageFile] = useState(null);
 
-  const { mutate } = useMutation(createContent(), {
+  const { mutate } = useMutation(createContent, {
     onSuccess: () => {
       router.push("/");
-      console.log("뮤테이트");
       alert("컨텐츠 등록이 성공되었습니다");
     },
     onError: (error) => {
@@ -65,7 +63,7 @@ const NewContents = () => {
   });
 
   return (
-    <wrapper className="wrapper">
+    <main className="main">
       <Header />
       <div className="py-10 mt-6 ">
         <h3 className="text-4xl font-extrabold text-center">컨텐츠 등록</h3>
@@ -73,18 +71,16 @@ const NewContents = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={contentsSchema}
-            onSubmit={async (values, { setSubmitting }) => {
+            onSubmit={(values, { setSubmitting }) => {
               setSubmitting(false);
-              const { shoe_size, shoe_name, shoe_color, shoe_brand, image } =
-                values;
-              const shoeData = {
-                shoe_size,
-                shoe_name,
-                shoe_color,
-                shoe_brand,
-              };
-              mutate(shoeData);
-              onSubmitHandler(image);
+              console.log("valuees", values);
+
+              const formData = convertObjectToFormData({
+                modelName: "content",
+                data: values,
+              });
+              mutate(formData);
+              onSubmitHandler(values);
             }}
           >
             {({
@@ -247,7 +243,7 @@ const NewContents = () => {
         </section>
       </div>
       <Footer />
-    </wrapper>
+    </main>
   );
 };
 

@@ -34,7 +34,7 @@
   @apply hover:bg-yellow-700 hover:text-white;
 }
 
-wrapper {
+main {
   display: flex;
   min-height: 100vh;
   flex-direction: column;

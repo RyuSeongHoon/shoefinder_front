@@ -80,7 +80,7 @@ const SignUp = () => {
   };
 
   return (
-    <wrapper className="wrapper">
+    <main className="main">
       <Header />
       <div className="py-10 mt-6 ">
         <h3 className="text-4xl font-extrabold text-center">회원가입</h3>
@@ -249,7 +249,7 @@ const SignUp = () => {
         </section>
       </div>
       <Footer />
-    </wrapper>
+    </main>
   );
 };
 

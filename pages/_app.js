@@ -13,7 +13,7 @@ const queryClient = new QueryClient();
 
 Amplify.configure({
   Auth: {
-    identityPoolId: "ap-northeast-2:ea71cc3c-2f7c-46e5-9edf-7ce850c14e52", //REQUIRED - Amazon Cognito Identity Pool ID
+    identityPoolId: "ap-northeast-2:4ad24740-0f4a-4946-aa72-33fb163d7b5c", //REQUIRED - Amazon Cognito Identity Pool ID
     region: "ap-northeast-2", // REQUIRED - Amazon Cognito Region
     userPoolId: "ap-northeast-2_QxUmgA7Bg", //OPTIONAL - Amazon Cognito User Pool ID
     userPoolWebClientId: "3hvhpn6vhjodqcmkvudajft432", //OPTIONAL - Amazon Cognito Web Client ID
