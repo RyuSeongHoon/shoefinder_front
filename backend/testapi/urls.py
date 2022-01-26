@@ -1,6 +1,8 @@
-from django.urls import path, include 
+from django.urls import path, include
 # from . import views 
-from .views import TestViewSet
+from .views import TestViewSet, article_list
+from rest_framework.routers import DefaultRouter
+
 
 test_list = TestViewSet.as_view({
     'get': 'list',
@@ -15,7 +17,7 @@ test_detail = TestViewSet.as_view({
 })
 
 urlpatterns = [ 
-    #path('', views.index), 
-    path('test/',test_list), 
-    path('test/<int:pk>',test_detail) 
+    path('',test_list), 
+    # path('<int:pk>/',test_detail),
+    path('<slug:slug>/', article_list, name='test_details'),
 ]

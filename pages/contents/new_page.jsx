@@ -2,18 +2,20 @@ import React, { useCallback, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Header from "../../src/components/header";
-import Footer from "../../src/components/Footer";
+import Footer from "../../src/components/footer";
 import useAuth from "../../src/common/hooks/useAuth";
 import { Storage } from "aws-amplify";
 import { useMutation } from "react-query";
 import router from "next/router";
+import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import { createContent } from "../../src/common/api/index";
 import { convertObjectToFormData } from "../../src/utils";
+import { useRecoilState } from "recoil";
+import { post_idSelector, uuidSelector } from "../../src/common/selectors";
 
 const initialValues = {
   shoe_name: "",
-  shoe_brand: "",
   shoe_size: "",
   shoe_color: "",
   image: "",
@@ -21,15 +23,14 @@ const initialValues = {
 
 const contentsSchema = Yup.object().shape({
   shoe_name: Yup.string().required("이름을 입력해주세요"),
-  shoe_brand: Yup.string().required("브랜드를 입력해주세요"),
   shoe_size: Yup.number().required("사이즈를 골라 주세요"),
   shoe_color: Yup.string().required("색상을 입력해주세요"),
 });
 
-async function amplifyUpload(values) {
+async function amplifyUpload(values, shoe_brand) {
   const { image } = values;
   try {
-    await Storage.put(`${uuidv4()}`, image, {
+    await Storage.put(`${shoe_brand}`, image, {
       level: "public",
       contentType: "file/png",
     });
@@ -40,9 +41,29 @@ async function amplifyUpload(values) {
 }
 
 const NewContents = () => {
-  const onSubmitHandler = useCallback(async (params) => {
+  const [post_id, setpost_id] = useRecoilState(post_idSelector);
+  const onSubmitHandler = useCallback(async (values) => {
     try {
-      await amplifyUpload(params);
+      const { attributes } = await Auth.currentAuthenticatedUser();
+      const sub_id = attributes.sub;
+      const shoe_brand = post_id;
+      await amplifyUpload(values, shoe_brand);
+      setpost_id(uuidv4());
+      const { shoe_color, shoe_name, shoe_size, image } = values;
+      const inputData = {
+        shoe_brand,
+        shoe_color,
+        shoe_name,
+        shoe_size,
+        sub_id,
+        image,
+      };
+      const formData = convertObjectToFormData({
+        modelName: "content",
+        data: inputData,
+      });
+
+      mutate(formData);
     } catch (error) {
       console.log("error content upload", error);
     }
@@ -73,13 +94,6 @@ const NewContents = () => {
             validationSchema={contentsSchema}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(false);
-              console.log("valuees", values);
-
-              const formData = convertObjectToFormData({
-                modelName: "content",
-                data: values,
-              });
-              mutate(formData);
               onSubmitHandler(values);
             }}
           >
@@ -150,25 +164,6 @@ const NewContents = () => {
                       {errors.shoe_name &&
                         touched.shoe_name &&
                         errors.shoe_name}
-                    </p>
-                  </section>
-                  <section className="flex flex-col inputSection">
-                    <label htmlFor="shoe_brand" className="title">
-                      브랜드 명
-                    </label>
-                    <input
-                      id="shoe_brand"
-                      name="shoe_brand"
-                      type="shoe_brand"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.shoe_brand}
-                      className="px-3 py-2 mt-2 mb-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-gray-700 focus:border-gray-700 sm:text-sm"
-                    ></input>
-                    <p className="errorMessage">
-                      {errors.shoe_brand &&
-                        touched.shoe_brand &&
-                        errors.shoe_brand}
                     </p>
                   </section>
                   <section className="flex justify-between w-full inputSection">

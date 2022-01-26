@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Header from "../../src/components/header";
-import Footer from "../../src/components/Footer";
+import Footer from "../../src/components/footer";
 import DaumPostcode from "react-daum-postcode";
 import { Auth } from "aws-amplify";
 import router from "next/router";

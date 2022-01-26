@@ -1,9 +1,23 @@
-from django.urls import path, include 
-from . import views 
+from django.urls import path, include
+# from . import views 
+from .views import TestViewSet, article_list
+from rest_framework.routers import DefaultRouter
 
-app_name = 'posts' 
+
+test_list = TestViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+# Blog detail 보여주기 + 수정 + 삭제
+test_detail = TestViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'delete': 'destroy'
+})
+
 urlpatterns = [ 
-    #path('', views.index), 
-    path('get/',views.get_api, name='get_api'), 
-    path('post/', views.post_api, name='post_api') 
+    path('',test_list), 
+    # path('<int:pk>/',test_detail),
+    path('<slug:slug>/', article_list, name='test_details'),
 ]

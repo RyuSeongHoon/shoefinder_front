@@ -2,13 +2,13 @@ import { React, useCallback } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Header from "../../src/components/header";
-import Footer from "../../src/components/Footer";
+import Footer from "../../src/components/footer";
 import Link from "next/link";
 import { Auth } from "aws-amplify";
 import router from "next/router";
 import { useRecoilState } from "recoil";
-import { isAuthenticated } from "../../src/common/atom";
 import useAuth from "../../src/common/hooks/useAuth";
+import { subIdSelector } from "../../src/common/selectors";
 
 const initialValues = {
   email: "",
@@ -30,31 +30,29 @@ async function amplifysignIn(values) {
   try {
     await Auth.signIn(email, password);
     router.push("/");
-    // const { attributes } = await Auth.currentAuthenticatedUser();
-    // Auth.currentAuthenticatedUser({
-    //       bypassCache: true,
-    //     })
-    //       .then(console.log("attribute", attribute))
-    //       .catch((err) => console.log(err));
   } catch (error) {
     console.log("error signing in", error);
   }
 }
 
 const Login = () => {
-  const [isAutenticated, setisAutenticated] = useRecoilState(isAuthenticated);
+  const [sub, setSub] = useRecoilState(subIdSelector);
   const { updateCurrentUser } = useAuth();
 
   const onSubmitHandler = useCallback(
     async (signInparams) => {
       try {
         await amplifysignIn(signInparams);
+        const { attributes } = await Auth.currentAuthenticatedUser();
         updateCurrentUser(signInparams);
+
+        const sub_id = attributes.sub;
+        setSub(sub_id);
       } catch (error) {
         console.log("login error", error);
       }
     },
-    [updateCurrentUser]
+    [setSub, updateCurrentUser]
   );
 
   return (

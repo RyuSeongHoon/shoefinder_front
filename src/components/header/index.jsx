@@ -49,7 +49,7 @@ export default function Header() {
             </div>
             <div className="flex ml-5 font-bold mt-9">
               <div>
-                <Link href="/showList나중에 업데이트 하기">
+                <Link href="/contents/index_page">
                   <a className="mr-7 mdHidden">Shoe List</a>
                 </Link>
               </div>
