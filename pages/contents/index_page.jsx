@@ -55,7 +55,7 @@ const ContentIndexPage = () => {
               등록된 컨텐츠가 없습니다
             </h1>
             <p className="mt-2 text-base text-gray-400">
-              새로운 컨텐츠를 등록한 후 서비스를 이용해보세요
+              새로운 컨텐츠를 등록한 후 서비스를 이용해보세요.
             </p>
           </div>
         </div>
