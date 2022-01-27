@@ -10,7 +10,6 @@ import { useRecoilState } from "recoil";
 
 const ContentIndexPage = () => {
   const [sub, setSub] = useRecoilState(subIdSelector);
-  console.log("sub타입", typeof sub);
 
   const Content_info_key = "contents/infinite";
   const {
@@ -23,8 +22,6 @@ const ContentIndexPage = () => {
   } = useInfiniteQuery(Content_info_key, getInfiniteContents(sub), {
     getNextPageParam: (lastPage) => lastPage.next_cursor,
   });
-
-  console.log("data", data);
 
   useEffect(() => {
     refetch();
