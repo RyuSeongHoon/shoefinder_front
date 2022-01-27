@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Header from "../../src/components/header";
-import Footer from "../../src/components/Footer";
+import Footer from "../../src/components/footer";
 import DaumPostcode from "react-daum-postcode";
 import { Auth } from "aws-amplify";
 import router from "next/router";
@@ -22,7 +22,6 @@ const SignUp = () => {
           email,
         },
       });
-      console.log("user", user);
       alert("가입이 완료 되었습니다. ShoeFinder에 오신걸 환영합니다.");
       router.push("/users/welcome");
     } catch (error) {
@@ -81,7 +80,7 @@ const SignUp = () => {
   };
 
   return (
-    <wrapper className="wrapper">
+    <main className="main">
       <Header />
       <div className="py-10 mt-6 ">
         <h3 className="text-4xl font-extrabold text-center">회원가입</h3>
@@ -250,7 +249,7 @@ const SignUp = () => {
         </section>
       </div>
       <Footer />
-    </wrapper>
+    </main>
   );
 };
 

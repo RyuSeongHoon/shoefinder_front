@@ -1,0 +1,14 @@
+{
+  "resourceName": "shoefinder",
+  "policyUUID": "671e3e03",
+  "bucketName": "shoefindere0a0e28b90174ca9bebcbcdf0507e170",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "S3Trigger6505321a",
+  "groupAccess": {}
+}

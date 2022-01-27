@@ -2,12 +2,13 @@ import { React, useCallback } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Header from "../../src/components/header";
-import Footer from "../../src/components/Footer";
+import Footer from "../../src/components/footer";
 import Link from "next/link";
 import { Auth } from "aws-amplify";
 import router from "next/router";
 import { useRecoilState } from "recoil";
-import { isAuthenticated } from "../../src/common/atom";
+import useAuth from "../../src/common/hooks/useAuth";
+import { subIdSelector } from "../../src/common/selectors";
 
 const initialValues = {
   email: "",
@@ -24,45 +25,38 @@ const signInSchema = Yup.object().shape({
     .required("비밀번호를 입력해주세요"),
 });
 
-//     const isExpired = user.signInUserSession.accessToken.payload.exp;
-
 async function amplifysignIn(values) {
   const { email, password } = values;
   try {
-    const user = await Auth.signIn(email, password);
+    await Auth.signIn(email, password);
     router.push("/");
-    console.log("로그인시 유저", user);
-
-    Auth.currentAuthenticatedUser({
-      bypassCache: true,
-    })
-      .then((user) => console.log(user))
-      .catch((err) => console.log(err));
-    console.log("attributes", attributes.email);
   } catch (error) {
     console.log("error signing in", error);
   }
 }
 
 const Login = () => {
-  const [isAutenticate, setIsAutenticate] = useRecoilState(isAuthenticated);
+  const [sub, setSub] = useRecoilState(subIdSelector);
+  const { updateCurrentUser } = useAuth();
 
-  const onSubmitHander = useCallback(
+  const onSubmitHandler = useCallback(
     async (signInparams) => {
       try {
         await amplifysignIn(signInparams);
-        setIsAutenticate(true);
+        const { attributes } = await Auth.currentAuthenticatedUser();
+        updateCurrentUser(signInparams);
+
+        const sub_id = attributes.sub;
+        setSub(sub_id);
       } catch (error) {
         console.log("login error", error);
       }
     },
-    [setIsAutenticate]
+    [setSub, updateCurrentUser]
   );
 
-  console.log("isauten", isAutenticate);
-
   return (
-    <wrapper className="wrapper">
+    <main className="main">
       <Header />
       <div className="py-10 mt-6">
         <div className="flex flex-col justify-center ">
@@ -71,7 +65,7 @@ const Login = () => {
             <Formik
               initialValues={initialValues}
               validationSchema={signInSchema}
-              onSubmit={onSubmitHander}
+              onSubmit={onSubmitHandler}
             >
               {({
                 values,
@@ -141,7 +135,7 @@ const Login = () => {
       <div className="footer">
         <Footer />
       </div>
-    </wrapper>
+    </main>
   );
 };
 
